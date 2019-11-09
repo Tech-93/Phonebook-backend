@@ -19,28 +19,29 @@ app.use(cors())
 
 
 app.get('/api/persons', (req, res) => {
-Person.find({}).then(persons => {
-  res.json(persons.map(person => person.toJSON()))
-}) 
+
+  Person.find({}).then(persons => {
+    res.json(persons.map(person => person.toJSON()))
+  })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
-  
+
   Person.findById(request.params.id).then(person => {
     if(person){
-    response.json(person.toJSON())
-  } else {
-    response.status(404).end()
-  }
+      response.json(person.toJSON())
+    } else {
+      response.status(404).end()
+    }
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id).then(result => {
     response.status(204).end()
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/info', (req, res) => {
@@ -48,7 +49,6 @@ app.get('/info', (req, res) => {
   Person.find({}).then(persons => {
     res.send('<div> Phonebook has ' + persons.length + ' people <div/>' + '<div>' + time +  '<div/>')
   })
-  
 })
 
 
@@ -59,19 +59,19 @@ app.post('/api/persons', (request, response, next) => {
 
 
   if (!body.name || !body.number) {
-    return response.status(400).json({ 
-      error: 'name/number missing' 
+    return response.status(400).json({
+      error: 'name/number missing'
     })
   } else{
-  const person = new Person({
-    name:body.name,
-    number: body.number
-  })
+    const person = new Person({
+      name:body.name,
+      number: body.number
+    })
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson.toJSON())
-  })
-  .catch(error => next(error))
+    person.save().then(savedPerson => {
+      response.json(savedPerson.toJSON())
+    })
+      .catch(error => next(error))
 
   }
 })
@@ -84,12 +84,11 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number
   }
 
-  
-  Person.findByIdAndUpdate(body.id, person, {new: true})
-  .then(updatedPerson => {
-    response.json(updatedPerson.toJSON())
-  })
-  .catch(error => next(error))
+  Person.findByIdAndUpdate(body.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson.toJSON())
+    })
+    .catch(error => next(error))
 
 })
 
